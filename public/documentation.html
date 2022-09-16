@@ -5,13 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fellini Movies</title>
-
-    <!-- Fellini Movies Web
-Application will provide users with access to information about different
-Fellini movies. Users will be able to sign up, update their
-personal information, and create a list of their favorite Fellini movies. -->
 </head>
+
+<h1>Fellini Movies API</h1> 
+
+<p>Fellini Movies WebApplication provided users with access to information about different
+Fellini movies. 
+
+</p> Users will be able to sign up, update their
+personal information, and create a list of their favorite Fellini movies.
+
 <body>
+  <br>
+  <br>  
+    
+    
     <table>
         <tr>
           <th>REQUEST</th>
@@ -28,11 +36,36 @@ personal information, and create a list of their favorite Fellini movies. -->
           <td>/movie/[ID]</td>
           <td>GET</td>
         </tr>
-         <tr>
-          <td>Give a Movie a rating</td>
-          <td>/movie/[ID]/rating</td>
+        <tr>
+            <td>Add A User</td>
+            <td>/user/[user name]</td>
+            <td>PUT</td>
+           </tr>
+          <tr>
+             <td>Delete A User</td>
+             <td>/user/[user name]</td>
+              <td>DELETE</td>
+         </tr>
+         <td>Update a User</td>
+         <td>/user/[user name]</td>
           <td>PUT</td>
-          </tr>
+          <tr>
+            <td>Add a film to Favorites</td>
+            <td>/movie/[ID]/[movie title]</td>
+            <td>PUT</td>
+            </tr>
+          <tr>
+            <td>Delete a film to Favorites</td>
+            <td>/movie/[ID]/[movie title]</td>
+             <td>DELETE</td>
+            </tr>
+            <tr>
+             <td>Return Data about a Genre</td>
+             <td>/movie/genre/[movie genre]</td>
+             <td>GET</td>
+            </tr>
+
+             
       </table>
 </body>
 </html>

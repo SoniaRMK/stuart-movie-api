@@ -1,8 +1,9 @@
-const mongoose = require('mongooose');
-const Models = require('./model.js');
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+const bodyParser = require('body-parser');
 
 const Movies = Models.Movie;
-const Users = Modles.User;
+const Users = Models.User;
 
 mongoose.connect('mongodb://localhost:27017/FelliniMovieDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -11,8 +12,10 @@ const express = require('express');
 const { json } = require('express/lib/response');
 const res = require('express/lib/response');
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
+
 const uuid = require('uuid');
 
 
@@ -30,9 +33,12 @@ let myLogger = (req, res, next) => {
 
 let users = [
   { id: '1',
+    username: 'S.hardie',
+    password: 'password123',
     name: 'Stuart',
     surname: 'Hardie',
-    date_of_birth: '04/09/1976',
+    Email: 'stuartfreaks@me.com',
+    Birthday: '04/09/1976',
     favoriteMovies: ["La Strada", '8 1/2']
   }
 ]

@@ -1,3 +1,12 @@
+const mongoose = require('mongooose');
+const Models = require('./model.js');
+
+const Movies = Models.Movie;
+const Users = Modles.User;
+
+mongoose.connect('mongodb://localhost:27017/FelliniMovieDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 const express = require('express');
 const { json } = require('express/lib/response');
 const res = require('express/lib/response');

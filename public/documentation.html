@@ -47,11 +47,12 @@ personal information, and create a list of their favorite Fellini movies.
               <td>DELETE</td>
          </tr>
          <td>Update a User</td>
-         <td>/user/[user name]</td>
+         <td>JSON object with:
+            username, password, name , surname, emial, Birthday, favoriteMovies</td>
           <td>PUT</td>
           <tr>
             <td>Add a film to Favorites</td>
-            <td>/movie/[ID]/[movie title]</td>
+            <td>JSON object with favorite movie</td>
             <td>PUT</td>
             </tr>
           <tr>

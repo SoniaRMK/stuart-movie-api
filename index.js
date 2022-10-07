@@ -47,7 +47,7 @@ let myLogger = (req, res, next) => {
 
  // ENDPOINTS  //
 
-  //Welcome message (This is Working)
+  //Welcome message (This is Working)********
   
   app.get('/', (req, res) => {
     let responseText = 'Welcome to The Fellini Club!';
@@ -55,14 +55,14 @@ let myLogger = (req, res, next) => {
     res.send(responseText);
   });
 
-  // Documentation page (working)
+  // Documentation page (working)**********
 
   app.get('/documentation', (req, res) => {
     res.sendFile('public/documentation.html', { root: __dirname });
   });
 
 
- // Get all movies (Tested & Working)
+ // Get all movies (Tested & Working)********
  app.get('/movies', (req, res) => {
   Movies.find().then(movies => res.json(movies));
 })
@@ -73,7 +73,7 @@ let myLogger = (req, res, next) => {
 app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
-      res.json(movie.Title);
+      res.json(movie);
     })
     .catch ((err) => {
     console.error(err);
@@ -86,7 +86,7 @@ app.get('/movies/:Title', (req, res) => {
 app.get('/movies/genres/:genre',(req, res) => {
   Movies.findOne({ "genreName": req.params.genre })
     .then((movie) => {
-      res.send(movie.genre);
+      res.send(movie );
     })
     .catch((err) => {
       console.error(err);
@@ -107,7 +107,7 @@ app.get('/movies/genres/:genre',(req, res) => {
   app.get('/genres/:Genre', (req, res) => {
     Movies.findOne({ "Genre.Name": req.params.Genre })
       .then((movie) => {
-        res.send(movie.Genre.Description);
+        res.send(movie.genre.Description);
       })
       .catch((err) => {
         console.error(err);

@@ -72,8 +72,8 @@ let myLogger = (req, res, next) => {
 
 app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ Title: req.params.Title })
-    .then((movie) => {
-      res.json(movie);
+    .then((movies) => {
+      res.json(movies);
     })
     .catch ((err) => {
     console.error(err);
@@ -85,8 +85,8 @@ app.get('/movies/:Title', (req, res) => {
 
 app.get('/movies/genres/:genre',(req, res) => {
   Movies.findOne({ "genreName": req.params.genre })
-    .then((movie) => {
-      res.send(movie );
+    .then((movies) => {
+      res.send(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -95,7 +95,7 @@ app.get('/movies/genres/:genre',(req, res) => {
 });
   
 
-  // GET all users (Tested & Working)
+  // GET all users (Tested & Working) ***********
   app.get('/users', (req, res) => {
     Users.find().then(users => res.json(users));
   });
@@ -107,7 +107,7 @@ app.get('/movies/genres/:genre',(req, res) => {
   app.get('/genres/:Genre', (req, res) => {
     Movies.findOne({ "Genre.Name": req.params.Genre })
       .then((movie) => {
-        res.send(movie.genre.Description);
+        res.send(movie);
       })
       .catch((err) => {
         console.error(err);
@@ -134,18 +134,18 @@ app.get('/movies/genres/:genre',(req, res) => {
  
 // Creates a new user // expects a JSON in the request body
 app.post('/users', (req, res) => {
-  Users.findOne({ Username: req.body.Username })
+  Users.findOne({ username: req.body.username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + 'already exists');
+        return res.status(400).send(req.body.username + 'already exists');
       } else {
         Users
           .create({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Name: req.body.Name,
-            Surname: req.body.Surname,
-            Email: req.body.Email,
+            username: req.body.username,
+            password: req.body.password,
+            name: req.body.name,
+            surname: req.body.surname,
+            email: req.body.email,
             Birthday: req.body.Birthday,
             
           })
@@ -164,13 +164,13 @@ app.post('/users', (req, res) => {
 
   // Updates the information of a user by username
   app.put('/users/:Username', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
+    Users.findOneAndUpdate({ username: req.params.Username }, {
       $set: {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Name: req.body.Name,
-        Surname: req.body.Surname,
-        Email: req.body.Email,
+        username: req.body.username,
+        password: req.body.password,
+        name: req.body.name,
+        surname: req.body.surname,
+        email: req.body.email,
         Birthday: req.body.Birthday
       }
     },
@@ -196,25 +196,7 @@ app.get('/users/:username', (req, res) => {
     });
 });
 
-  // Updates the information of a user by username
-  app.put('/users/:Username', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-      $set: {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-      }
-    },
-    { new: true }) // the *updated (new) document is returned
-      .then((updatedUser) => {
-        res.json(updatedUser);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-});
+
 
  // Add a movie to a user's list of favorites
 app.post('/users/:Username/movies/:MovieID', (req, res) => {

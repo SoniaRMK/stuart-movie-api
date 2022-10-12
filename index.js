@@ -177,7 +177,7 @@ app.post('/users', (req, res) => {
 });
 
 
-// Add a movie to a user's list of favorites
+// Add a movie to a user's list of favorites  (NOT WORKING)
 app.post('/users/:username/movies/:MovieID', (req, res) => {
   Users.findOneAndUpdate({ username: req.params.username }, {
      $push: { FavoriteMovies: req.params.MovieID }
@@ -193,7 +193,7 @@ app.post('/users/:username/movies/:MovieID', (req, res) => {
   });
 });
 
-  //Delete Movie from favorite movies
+  //Delete Movie from favorite movies (NOT WORKING)
   
   app.delete('users/:username/movies/:MovieID', (req, res) => {
     Users.findOneAndRemove({ Title: req.params.Title })
@@ -211,7 +211,7 @@ app.post('/users/:username/movies/:MovieID', (req, res) => {
   });
 
 
-// Delete a user by username  (Tested / Working)****
+// Delete a user by username  (NOT WORKING)
 app.delete('/users/:username', (req, res) => {
   Users.findOneAndRemove({ username: req.params.username })
     .then((user) => {
@@ -227,7 +227,7 @@ app.delete('/users/:username', (req, res) => {
     });
 });
 
-// Delete a user by id  (Tested / Working)****
+// Delete a user by id  (NOT WORKING)
 app.delete('/users/:_id', (req, res) => {
   Users.findOneAndRemove({ _id: req.params._id })
     .then((user) => {

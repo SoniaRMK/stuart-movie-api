@@ -47,7 +47,7 @@ let myLogger = (req, res, next) => {
 
  // ENDPOINTS  //
 
-  //Welcome message (This is Working)********
+  //Welcome message (Tested/Working)***
   
   app.get('/', (req, res) => {
     let responseText = 'Welcome to The Fellini Club!';
@@ -55,20 +55,20 @@ let myLogger = (req, res, next) => {
     res.send(responseText);
   });
 
-  // Documentation page (working)**********
+  // Documentation page (Tested/Working)***
 
   app.get('/documentation', (req, res) => {
     res.sendFile('public/documentation.html', { root: __dirname });
   });
 
 
- // Get all movies (Tested & Working)********
+ // Get all movies (Tested / Working)***
  app.get('/movies', (req, res) => {
   Movies.find().then(movies => res.json(movies));
 })
 
   
-// Returns a joson object of a Single Movie
+// Returns a joson object of a Single Movie (Tested / Working)***
 
 app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ Title: req.params.Title })
@@ -81,16 +81,16 @@ app.get('/movies/:Title', (req, res) => {
     })
 });
 
-//Returns all movies of a particular genre
+//Returns all movies of a particular genre  ++++++
 
-app.get('/movies/genres/:genre',(req, res) => {
-  Movies.findOne({ "genreName": req.params.genre })
+app.get('/movies/:genre', (req, res) => {
+  Movies.find({ genre: req.params.genre })
     .then((movies) => {
-      res.send(movies);
+      res.json(movies);
     })
-    .catch((err) => {
-      console.error(err);
-      res.status(400).send('Error: ' + err);
+    .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err)
     })
 });
   
@@ -104,27 +104,18 @@ app.get('/movies/genres/:genre',(req, res) => {
 
   // Return Data about a genre (description) 
 
-  app.get('/genres/:Genre', (req, res) => {
-    Movies.findOne({ "Genre.Name": req.params.Genre })
-      .then((movie) => {
-        res.send(movie);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send('Error: ' + err);
-      })
-  });
+
 
   // Returns the JSON object of of a director by name
 
-  app.get('movies/directors/:Name', (req, res) => {
-    Movies.findOne({ "Director.Name": req.params.Name })
-      .then((movie) => {
-        res.json(movie.Director);
+  app.get('/movies/directors/:director', (req, res) => {
+    Movies.findOne({ director: req.params.director })
+      .then((movies) => {
+        res.json(movies.director);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
+      .catch ((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err)
       })
   });
 
@@ -132,7 +123,7 @@ app.get('/movies/genres/:genre',(req, res) => {
 
 
  
-// Creates a new user // expects a JSON in the request body
+// Creates a new user // expects a JSON in the request body (Working)**********
 app.post('/users', (req, res) => {
   Users.findOne({ username: req.body.username })
     .then((user) => {
@@ -162,16 +153,17 @@ app.post('/users', (req, res) => {
     });
 });
 
-  // Updates the information of a user by username
-  app.put('/users/:Username', (req, res) => {
-    Users.findOneAndUpdate({ username: req.params.Username }, {
+  // Updates the information of a user by username (Tested and Working)
+  app.put('/users/:username', (req, res) => {
+    Users.findOneAndUpdate({ username: req.params.username }, {
       $set: {
         username: req.body.username,
         password: req.body.password,
         name: req.body.name,
         surname: req.body.surname,
         email: req.body.email,
-        Birthday: req.body.Birthday
+        Birthday: req.body.Birthday,
+        favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
       }
     },
     { new: true }) // the *updated (new) document is returned
@@ -184,23 +176,10 @@ app.post('/users', (req, res) => {
       });
 });
 
-// Get a user by username
-app.get('/users/:username', (req, res) => {
-  Users.findOne({ username: req.params.username })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
 
-
-
- // Add a movie to a user's list of favorites
-app.post('/users/:Username/movies/:MovieID', (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
+// Add a movie to a user's list of favorites
+app.post('/users/:username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ username: req.params.username }, {
      $push: { FavoriteMovies: req.params.MovieID }
    },
    { new: true }, // This line makes sure that the updated document is returned
@@ -216,34 +195,52 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 
   //Delete Movie from favorite movies
   
-  app.delete('/users/:Username/movies/:_id', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-      $pull: { FavoriteMovies: req.params._id }
-    },
-    { new: true })  // the *updated (new) document is returned
-    .then((updatedUser) => {
-      res.json(updatedUser);
+  app.delete('users/:username/movies/:MovieID', (req, res) => {
+    Users.findOneAndRemove({ Title: req.params.Title })
+      .then((movies) => {
+        if (!movies) {
+          res.status(400).send(req.params.Title + ' was not found');
+        } else {
+          res.status(200).send(req.params.Title + ' was deleted.');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+
+
+// Delete a user by username  (Tested / Working)****
+app.delete('/users/:username', (req, res) => {
+  Users.findOneAndRemove({ username: req.params.username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.username + ' was not found');
+      } else {
+        res.status(200).send(req.params.username + ' was deleted.');
+      }
     })
     .catch((err) => {
       console.error(err);
       res.status(500).send('Error: ' + err);
     });
-  });
+});
 
-
-// Delete a user by username
-app.delete('/users/:Username/movies/:_id', (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $pull: { FavoriteMovies: req.params._id }
-  },
-  { new: true })  // the *updated (new) document is returned
-  .then((updatedUser) => {
-    res.json(updatedUser);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+// Delete a user by id  (Tested / Working)****
+app.delete('/users/:_id', (req, res) => {
+  Users.findOneAndRemove({ _id: req.params._id })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params._id + ' was not found');
+      } else {
+        res.status(200).send(req.params._id + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
   
  

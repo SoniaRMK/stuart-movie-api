@@ -30,6 +30,7 @@ let auth = require('./auth.js')(app)
   require('./passport');
 
 const uuid = require('uuid');
+const { restart } = require('nodemon');
 
 
 
@@ -129,40 +130,61 @@ app.get('/movies/directors/:name', passport.authenticate('jwt', {session: false}
   
 
 
-// 5. Creates a new user // expects a JSON in the request body (Working)**********
+// 5. Creates a new user // expects a JSON in the request body (Working)*(Working With Validation)
 
-app.post('/users', (req, res) => {
-  let hashedPassword = Users.hashPassword(req.body.password);
-  Users.findOne({ username: req.body.username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.username + 'already exists');
-      } else {
-        Users
-          .create({
-            username: req.body.username,
-            password: hashedPassword,
-            name: req.body.name,
-            surname: req.body.surname,
-            email: req.body.email,
-            Birthday: req.body.Birthday,
-            
-          })
-          .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
+app.post('/users',
+  // Validation logic here for request
+  //you can either use a chain of methods like .not().isEmpty()
+  //which means "opposite of isEmpty" in plain english "is not empty"
+  //or use .isLength({min: 5}) which means
+  //minimum value of 5 characters are only allowed
+  [
+    check('username', 'username is required').isLength({min: 5}),
+    check('username', 'username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail()
+  ], (req, res) => {
+
+  // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashedPassword(req.body.password);
+    Users.findOne({ username: req.body.username }) // Search to see if a user with the requested username already exists
+      .then((user) => {
+        if (user) {
+          //If the user is found, send a response that it already exists
+          return res.status(400).send(req.body.username + ' already exists');
+        } else {
+          Users
+            .create({
+              username: req.body.username,
+              password: hashedPassword,
+              name: req.body.name,
+              surname: req.body.surname,
+              email: req.body.email,
+              Birthday: req.body.Birthday
+            })
+            .then((user) => { res.status(201).json(user) })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
 
   // 6. Updates the information of a user by username (Tested and Working)
-  app.put('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
+  app.put('/users/:username', passport.authenticate('jwt', {session: false}), 
+  
+  (req, res) => {
     Users.findOneAndUpdate({ username: req.params.username }, {
       $set: {
         username: req.body.username,

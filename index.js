@@ -11,6 +11,15 @@ const express = require('express');
 const { json } = require('express/lib/response');
 const res = require('express/lib/response');
 const app = express();
+//CORS 
+const cors = require('cors');
+app.use(cors());
+
+//Authentication
+
+const { check, validationResult } = require('express-validator');
+
+// Bodyparser morgan middleware & Authorization
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const morgan = require('morgan');
@@ -122,7 +131,8 @@ app.get('/movies/directors/:name', passport.authenticate('jwt', {session: false}
 
 // 5. Creates a new user // expects a JSON in the request body (Working)**********
 
-app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.post('/users', (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.password);
   Users.findOne({ username: req.body.username })
     .then((user) => {
       if (user) {
@@ -131,7 +141,7 @@ app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) =>
         Users
           .create({
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             name: req.body.name,
             surname: req.body.surname,
             email: req.body.email,
@@ -177,6 +187,7 @@ app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) =>
 
   // 7. Allow users add to their list of Favorites (create)
   app.post('/users/:username/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOneAndUpdate({ username: req.params.username }, {
       $push: { favoriteMovies: req.params.MovieID }
     },

@@ -183,8 +183,21 @@ app.post('/users',
 
   // 6. Updates the information of a user by username (Tested and Working)
   app.put('/users/:username', passport.authenticate('jwt', {session: false}), 
+
+  [
+    check('username', 'username is required').isLength({min: 5}),
+    check('username', 'username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail()
+  ],
   
-  (req, res) => {
+  (req, res) => {    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    
     Users.findOneAndUpdate({ username: req.params.username }, {
       $set: {
         username: req.body.username,

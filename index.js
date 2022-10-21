@@ -38,7 +38,7 @@ const { restart } = require('nodemon');
 
 // mongoose.connect('mongodb://localhost:27017/FelliniMovieDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect('mongodb+srv://Databaseuser1:qZY1PbPJczF9MhXO@cluster0.swog6pa.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 let myLogger = (req, res, next) => {
     console.log(req.url);

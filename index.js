@@ -66,9 +66,7 @@ let myLogger = (req, res, next) => {
 
   
   app.get('/', (req, res) => {
-    let responseText = 'Welcome to The Fellini Club!';
-    responseText += '<small>Requested at: ' + req.requestTime + '</small>';
-    res.send(responseText);
+    res.send("Welcome to MyFlix!");
   });
 
   // Documentation page (Tested/Working)***

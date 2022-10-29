@@ -38,7 +38,10 @@ const { restart } = require('nodemon');
 
 // mongoose.connect('mongodb://localhost:27017/FelliniMovieDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(
+  "mongodb+srv://myFlixAppAdmin:AdminFlixpassword@my-flix-application.mcflq.mongodb.net/myFlixDB?retryWrites=true&w=majority",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+);
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
@@ -66,7 +69,9 @@ let myLogger = (req, res, next) => {
 
   
   app.get('/', (req, res) => {
-    res.send("Welcome to MyFlix!");
+    let responseText = 'Welcome to The Fellini Club!';
+    responseText += '<small>Requested at: ' + req.requestTime + '</small>';
+    res.send(responseText);
   });
 
   // Documentation page (Tested/Working)***

@@ -43,22 +43,22 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
-let myLogger = (req, res, next) => {
-    console.log(req.url);
-    next();
-  };
+// let myLogger = (req, res, next) => {
+//     console.log(req.url);
+//     next();
+//   };
   
-  let requestTime = (req, res, next) => {
-    req.requestTime = Date.now();
-    next();
-  }; 
+//   let requestTime = (req, res, next) => {
+//     req.requestTime = Date.now();
+//     next();
+//   }; 
 
   app.use(morgan('common'));
 
   app.use(express.static('public'));
   
-  app.use(myLogger);
-  app.use(requestTime);
+  // app.use(myLogger);
+  // app.use(requestTime);
 
   app.use(bodyParser.json());
 
@@ -70,7 +70,7 @@ let myLogger = (req, res, next) => {
   
   app.get('/', (req, res) => {
     let responseText = 'Welcome to The Fellini Club!';
-    responseText += '<small>Requested at: ' + req.requestTime + '</small>';
+    // responseText += '<small>Requested at: ' + req.requestTime + '</small>';
     res.send(responseText);
   });
 

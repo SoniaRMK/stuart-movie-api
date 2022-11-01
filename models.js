@@ -3,26 +3,30 @@ const mongoose = require("mongoose"),
 
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
-  Description: { type: String, required: true },
-  Genre: {
-    Name: String,
-    Description: String,
-  },
-  Director: {
-    Name: String,
+  year: Date,
+  summary: { type: String, required: true },
+  imageURL: { type: String, required: true },
+  director: {
+    name: String,
     Bio: String,
   },
+  Genre: {
+    name: String,
+    description: String,
+  },
   Actors: [String],
-  ImagePath: String,
+  imageURL: String,
   Featured: Boolean,
 });
 
 let userSchema = mongoose.Schema({
-  Username: { type: String, required: true },
-  Password: { type: String, required: true },
-  Email: { type: String, required: true },
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  surname: { type: String, required: true },
+  email: { type: String, required: true },
   Birthday: Date,
-  FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
+  favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
 });
 
 userSchema.statics.hashPassword = (password) => {

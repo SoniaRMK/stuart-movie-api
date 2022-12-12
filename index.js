@@ -16,7 +16,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect('mongodb+srv://Databaseuser1:qZY1PbPJczF9MhXO@cluster0.swog6pa.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -69,7 +69,6 @@ app.get("/", (req, res) => {
 // get all movies
 app.get(
   "/movies",
-  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Movies.find()
       .then((movies) => {
@@ -170,7 +169,7 @@ app.post(
     Users.findOne({ username: req.body.Username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.username + " already exists");
+          return res.status(400).send(req.body.Username + " already exists");
         } else {
           Users.create({
             username: req.body.Username,

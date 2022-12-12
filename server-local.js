@@ -1,4 +1,4 @@
-const app = require("./index");
+const app = require("./express/server");
 
 const { LOCAL_PORT } = require("./config");
 

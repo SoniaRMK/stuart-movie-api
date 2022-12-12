@@ -10,7 +10,7 @@ const { check, validationResult } = require("express-validator");
 
 const app = express();
 const mongoose = require("mongoose");
-const Models = require("./models.js");
+const Models = require("../models.js");
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -48,9 +48,9 @@ app.use(
   })
 );
 
-let auth = require("./auth")(app);
+let auth = require("../auth")(app);
 const passport = require("passport");
-require("./passport");
+require("../passport");
 // create a write stream (in append mode)
 // a ‘log.txt’ file is created in root directory
 const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {

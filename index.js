@@ -82,21 +82,21 @@ app.get(
   }
 );
 
-// get movies by title
-// app.get(
-//   "/movies/:Title",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     Movies.findOne({ Title: req.params.Title })
-//       .then((movie) => {
-//         res.status(200).json(movie);
-//       })
-//       .catch((err) => {
-//         console.error(err);
-//         res.status(500).send("Error: " + err);
-//       });
-//   }
-// );
+//get movies by title
+app.get(
+  "/movies/:Title",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.findOne({ Title: req.params.Title })
+      .then((movie) => {
+        res.status(200).json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
 
 // Temp file for disable to authentication
 

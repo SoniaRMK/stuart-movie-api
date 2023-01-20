@@ -132,9 +132,9 @@ app.get(
   "/movies/directors/:Name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Movies.findOne({ "Director.name": req.params.Name })
+    Movies.findOne({ "director.name": req.params.Name })
       .then((movies) => {
-        res.status(200).send(movies.Director);
+        res.status(200).send(movies.director);
       })
       .catch((err) => {
         console.error(err);

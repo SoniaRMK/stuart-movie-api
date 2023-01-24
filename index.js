@@ -98,18 +98,7 @@ app.get(
   }
 );
 
-// Temp file for disable to authentication
 
-app.get("/movies", function (req, res) {
-  Movies.find()
-    .then(function (movies) {
-      res.status(201).json(movies);
-    })
-    .catch(function (error) {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
 
 // get genre by name
 app.get(

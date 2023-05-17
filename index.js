@@ -159,6 +159,23 @@ app.get(
   }
 );
 
+//Get User by Name
+
+app.get(
+  "/users/:Name",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.findOne({ "users.name": req.params.Name })
+      .then((users) => {
+        res.status(200).json(users.name);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
 // add a user
 app.post(
   "/users",

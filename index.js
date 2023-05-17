@@ -165,7 +165,7 @@ app.get(
   "/users/:Name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Movies.findOne({ "users.name": req.params.Name })
+    Users.findOne({ "users.name": req.params.Name })
       .then((users) => {
         res.status(200).json(users.name);
       })
